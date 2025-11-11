@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buscador de Tipos - Sistema Avanzado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --accent: #60a5fa;
+      --accent-light: #dbeafe;
+      --bg-main: #f8fafc;
+      --bg-secondary: #ffffff;
+      --card-bg: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --error: #ef4444;
+      --error-bg: #fee2e2;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px 0;
+      line-height: 1.6;
+    }
+
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--bg-secondary);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: 28px;
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-light);
+    }
+
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"],
+    input[type="search"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-family: inherit;
+      transition: var(--transition);
+      background: var(--bg-main);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 4px var(--accent-light);
+      background: white;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-wrapper svg {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-wrapper input {
+      padding-left: 48px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      border: none;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--text-muted);
+      margin-left: 10px;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status.muted {
+      background: var(--border-light);
+      color: var(--text-muted);
+    }
+
+    .status.ok {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status.err {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+
+    .search-area {
+      display: none;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .results-info {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      border: 2px solid var(--primary-light);
+      border-radius: 999px;
+      padding: 6px 14px;
+      background: var(--accent-light);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .list {
+      list-style: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: white;
+    }
+
+    .item {
+      border-bottom: 1px solid var(--border-light);
+      transition: var(--transition);
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      background: var(--bg-main);
+    }
+
+    .itemHead {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .left {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .code {
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--accent-light);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      flex: 0 0 auto;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .desc {
+      font-weight: 600;
+      color: var(--text-primary);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chevron-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .item.expanded .chevron-icon {
+      transform: rotate(180deg);
+      color: var(--primary-light);
+    }
+
+    mark {
+      background: #fef08a;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .details {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--bg-main);
+    }
+
+    .details.open {
+      max-height: 2000px;
+      padding: 20px;
+      border-top: 2px solid var(--border);
+    }
+
+    .details-search {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: white;
+      border-radius: var(--radius);
+      border: 2px solid var(--accent-light);
+    }
+
+    .details-search label {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .details-search input {
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      background: white;
+    }
+
+    thead th {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      text-align: left;
+      padding: 14px 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    tbody td {
+      border-top: 1px solid var(--border-light);
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+
+    tbody tr {
+      transition: var(--transition);
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--bg-main);
+    }
+
+    tbody tr:hover {
+      background: var(--accent-light);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary-light);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .note {
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .note.info {
+      background: var(--accent-light);
+      color: var(--primary);
+      border-left: 4px solid var(--primary-light);
+    }
+
+    .note.err {
+      background: var(--error-bg);
+      color: var(--error);
+      border-left: 4px solid var(--error);
+    }
+
+    .note.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border-left: 4px solid var(--warning);
+    }
+
+    .note.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border-left: 4px solid var(--success);
+    }
+
+    #capMsg {
+      display: none;
+    }
+
+    .test-mode-banner {
+      background: linear-gradient(135deg, var(--warning) 0%, #f97316 100%);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      border-radius: var(--radius);
+      display: none;
+    }
+
+    .test-mode-banner.active {
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      thead th {
+        font-size: 0.75rem;
+        padding: 10px 8px;
+      }
+
+      tbody td {
+        font-size: 0.8rem;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="test-mode-banner" id="testModeBanner">
+    🧪 MODO DE PRUEBA ACTIVADO - Usando datos de ejemplo
+  </div>
+
+  <div class="header">
+    <h1>🔍 Buscador de Tipos</h1>
+    <p>Sistema Avanzado de Búsqueda y Gestión</p>
+  </div>
+
+  <div class="wrap">
+    <!-- TOKEN CARD -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">Autenticación</h2>
+      </div>
+      
+      <div class="input-group">
+        <label for="token">Token de Acceso</label>
+        <input id="token" type="text" placeholder="Ingrese su token (ej. 223709)" autocomplete="off">
+      </div>
+      
+      <div>
+        <button class="btn" id="btnValidar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Validar Token y Cargar Tipos
+        </button>
+        <button class="btn btn-secondary" id="btnTestMode">
+          🧪 Modo de Prueba
+        </button>
+      </div>
+      
+      <div id="tokenStatus" class="status muted">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Introduce el token y valida para comenzar
+      </div>
+    </div>
+
+    <!-- SEARCH CARD -->
+    <div class="card search-area" id="searchCard">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">Búsqueda Principal</h2>
+      </div>
+
+      <div class="input-group">
+        <label for="q">Buscar Tipos</label>
+        <div class="search-wrapper">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"></path>
+          </svg>
+          <input id="q" type="search" placeholder="Buscar por descripción o código... (múltiples palabras)" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="results-header">
+        <div class="results-info" id="resumen">0 resultados</div>
+        <div class="chips">
+          <div class="chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Token: <b id="chipToken"></b>
+          </div>
+        </div>
+      </div>
+
+      <ul id="lista" class="list"></ul>
+      
+      <div id="capMsg" class="note warning">
+        ⚠️ Mostrando los primeros 300 resultados. Refina tu búsqueda para ver menos.
+      </div>
+
+      <div class="stats-grid" id="statsGrid" style="display: none;">
+        <div class="stat-card">
+          <div class="stat-label">Total de Tipos</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Resultados Filtrados</div>
+          <div class="stat-value" id="statFiltered">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Detalles Cargados</div>
+          <div class="stat-value" id="statCached">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="notes"></div>
+  </div>
+
+  <script>
+    // Configuration
+    const BASE = "/Magic93Scripts/Mgrqispi93.dll?appname=webventas";
+    const TEST_MODE_ENABLED = true; // Set to false in production
+
+    // State
+    let tokenActual = "";
+    let tipos = [];
+    const detallesCache = new Map();
+    let isTestMode = false;
+
+    // DOM Elements
+    const el = id => document.getElementById(id);
+    const tokenInput = el('token');
+    const btnValidar = el('btnValidar');
+    const btnTestMode = el('btnTestMode');
+    const tokenStatus = el('tokenStatus');
+    const searchCard = el('searchCard');
+    const q = el('q');
+    const lista = el('lista');
+    const resumen = el('resumen');
+    const capMsg = el('capMsg');
+    const chipToken = el('chipToken');
+    const notes = el('notes');
+    const testModeBanner = el('testModeBanner');
+    const statsGrid = el('statsGrid');
+    const statTotal = el('statTotal');
+    const statFiltered = el('statFiltered');
+    const statCached = el('statCached');
+
+    // Mock data for testing
+    const MOCK_TIPOS = [
+      { codigo: 'A001', descripcion: 'Producto de Alta Calidad Premium' },
+      { codigo: 'A002', descripcion: 'Servicio de Mantenimiento Preventivo' },
+      { codigo: 'B001', descripcion: 'Material de Construcción Resistente' },
+      { codigo: 'B002', descripcion: 'Herramienta Eléctrica Industrial' },
+      { codigo: 'C001', descripcion: 'Equipo de Seguridad Certificado' },
+      { codigo: 'C002', descripcion: 'Sistema de Control Automatizado' },
+      { codigo: 'D001', descripcion: 'Componente Electrónico Avanzado' },
+      { codigo: 'D002', descripcion: 'Dispositivo de Medición Preciso' },
+      { codigo: 'E001', descripcion: 'Software de Gestión Empresarial' },
+      { codigo: 'E002', descripcion: 'Licencia de Uso Corporativo' },
+      { codigo: 'F001', descripcion: 'Servicio de Consultoría Técnica' },
+      { codigo: 'F002', descripcion: 'Capacitación Profesional Especializada' },
+      { codigo: 'G001', descripcion: 'Producto Químico Industrial' },
+      { codigo: 'G002', descripcion: 'Material de Limpieza Profesional' },
+      { codigo: 'H001', descripcion: 'Equipo de Oficina Moderno' },
+      { codigo: 'H002', descripcion: 'Mobiliario Ergonómico Premium' }
+    ];
+
+    const MOCK_DETALLES = {
+      'A001': [
+        { codigo: 'A001-01', calidad: 'Premium', descripcion: 'Versión Estándar', usos: '100', interno: 'INT-001', precio: '15000' },
+        { codigo: 'A001-02', calidad: 'Premium Plus', descripcion: 'Versión Mejorada', usos: '150', interno: 'INT-002', precio: '22000' },
+        { codigo: 'A001-03', calidad: 'Elite', descripcion: 'Versión Elite', usos: '200', interno: 'INT-003', precio: '35000' }
+      ],
+      'A002': [
+        { codigo: 'A002-01', calidad: 'Básico', descripcion: 'Mantenimiento Mensual', usos: '12', interno: 'SRV-001', precio: '5000' },
+        { codigo: 'A002-02', calidad: 'Completo', descripcion: 'Mantenimiento Integral', usos: '24', interno: 'SRV-002', precio: '9500' }
+      ],
+      'B001': [
+        { codigo: 'B001-01', calidad: 'Estándar', descripcion: 'Material Tipo A', usos: '500', interno: 'MAT-001', precio: '8000' },
+        { codigo: 'B001-02', calidad: 'Reforzado', descripcion: 'Material Tipo B', usos: '750', interno: 'MAT-002', precio: '12000' }
+      ]
+    };
+
+    // Utility Functions
+    function setNote(msg, type = 'info') {
+      notes.innerHTML = msg ? `<div class="note ${type}">${msg}</div>` : '';
+    }
+
+    function noteStatus(msg, cls = 'muted') {
+      tokenStatus.className = 'status ' + cls;
+      tokenStatus.innerHTML = msg;
+    }
+
+    function debounce(fn, ms) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(this, args), ms);
+      };
+    }
+
+    function escapeHtml(s = '') {
+      return s.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    function highlight(text, tokens) {
+      let out = escapeHtml(text);
+      tokens.forEach(tok => {
+        if (!tok) return;
+        const re = new RegExp('(' + tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+        out = out.replace(re, '<mark>$1</mark>');
+      });
+      return out;
+    }
+
+    async function fetchText(url, timeout = 15000) {
+      const ctrl = new AbortController();
+      const tm = setTimeout(() => ctrl.abort(), timeout);
+      const res = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
+      clearTimeout(tm);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.text();
+    }
+
+    function updateStats() {
+      statTotal.textContent = tipos.length;
+      statCached.textContent = detallesCache.size;
+      statsGrid.style.display = tipos.length > 0 ? 'grid' : 'none';
+    }
+
+    // Event Listeners
+    btnValidar.addEventListener('click', validarToken);
+    btnTestMode.addEventListener('click', activarModoTest);
+    q.addEventListener('input', debounce(renderLista, 150));
+    q.addEventListener('keydown', e => {
+      if (e.key === 'Enter') abrirPrimero();
+    });
+
+    // Main Functions
+    async function validarToken() {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        noteStatus('❌ Ingresa un token válido.', 'err');
+        return;
+      }
+
+      setNote('');
+      noteStatus('<span class="spinner"></span>Verificando token...', 'muted');
+      btnValidar.disabled = true;
+
+      try {
+        const txt = await fetchText(`${BASE}&prgname=svtoken&token=${encodeURIComponent(token)}`);
+        if (txt.trim() !== 'OK') {
+          noteStatus('❌ Token inválido o expirado.', 'err');
+          searchCard.style.display = 'none';
+          return;
+        }
+
+        noteStatus('✅ Token válido y verificado.', 'ok');
+        tokenActual = token;
+        chipToken.textContent = tokenActual;
+        isTestMode = false;
+        testModeBanner.classList.remove('active');
+        await cargarTipos();
+        searchCard.style.display = 'block';
+        q.focus();
+      } catch (err) {
+        noteStatus('❌ Error al verificar token.', 'err');
+        setNote('⚠️ No se pudo verificar el token: ' + escapeHtml(err.message), 'err');
+      } finally {
+        btnValidar.disabled = false;
+      }
+    }
+
+    async function activarModoTest() {
+      if (!TEST_MODE_ENABLED) {
+        setNote('⚠️ El modo de prueba está deshabilitado.', 'warning');
+        return;
+      }
+
+      isTestMode = true;
+      tokenActual = 'TEST-MODE-' + Date.now();
+      chipToken.textContent = 'MODO PRUEBA';
+      testModeBanner.classList.add('active');
+      
+      noteStatus('✅ Modo de prueba activado.', 'ok');
+      setNote('🧪 Usando datos de ejemplo para pruebas. Los datos no son reales.', 'info');
+
+      tipos = [...MOCK_TIPOS];
+      detallesCache.clear();
+      
+      // Pre-cargar algunos detalles en caché
+      Object.keys(MOCK_DETALLES).forEach(key => {
+        detallesCache.set(key, MOCK_DETALLES[key] || []);
+      });
+
+      searchCard.style.display = 'block';
+      renderLista();
+      updateStats();
+      q.focus();
+
+      // Simular backtesting
+      setTimeout(() => realizarBacktesting(), 1000);
+    }
+
+    async function cargarTipos() {
+      tipos = [];
+      detallesCache.clear();
+      lista.innerHTML = '';
+      resumen.textContent = '';
+      setNote('<span class="spinner"></span>Cargando tipos desde el servidor...', 'info');
+
+      try {
+        const csv = await fetchText(`${BASE}&prgname=svtipos&Arguments=-N${encodeURIComponent(tokenActual)}`);
+        tipos = csv.trim().split(/\r?\n/).map(l => {
+          const [c, d] = l.split(',');
+          return { codigo: (c || '').trim(), descripcion: (d || '').trim() };
+        }).filter(x => x.codigo && x.descripcion);
+
+        setNote('✅ Tipos cargados exitosamente.', 'success');
+        renderLista();
+        updateStats();
+      } catch (err) {
+        setNote('❌ Error al cargar tipos: ' + escapeHtml(err.message), 'err');
+      }
+    }
+
+    function renderLista() {
+      const raw = q.value.trim().toLowerCase();
+      const tokens = raw.split(/\s+/).filter(t => t.length >= 2);
+      
+      let items = tipos;
+      if (tokens.length) {
+        items = tipos.filter(t => {
+          const base = (t.descripcion + ' ' + t.codigo).toLowerCase();
+          return tokens.every(tok => base.includes(tok));
+        });
+      }
+
+      const total = items.length;
+      const CAP = 300;
+      capMsg.style.display = total > CAP ? 'block' : 'none';
+      if (total > CAP) items = items.slice(0, CAP);
+
+      resumen.textContent = `${items.length} de ${tipos.length} resultados`;
+      statFiltered.textContent = items.length;
+
+      lista.innerHTML = items.map(t => {
+        const desc = highlight(t.descripcion, tokens);
+        const cod = highlight(t.codigo, tokens);
+        const id = `details-${t.codigo}`;
+        
+        return `
+          <li class="item" id="item-${t.codigo}">
+            <div class="itemHead" onclick="toggleDetalles('${t.codigo}')">
+              <div class="left">
+                <span class="code">${cod}</span>
+                <div class="desc">${desc}</div>
+              </div>
+              <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <div class="details" id="${id}">
+              <div class="muted"><span class="spinner"></span>Cargando detalles...</div>
+            </div>
+          </li>
+        `;
+      }).join('');
+
+      updateStats();
+    }
+
+    function abrirPrimero() {
+      const first = lista.querySelector('.item');
+      if (first) {
+        const code = first.id.replace('item-', '');
+        toggleDetalles(code);
+      }
+    }
+
+    window.toggleDetalles = async function(tipo) {
+      const item = document.getElementById(`item-${tipo}`);
+      const panel = document.getElementById(`details-${tipo}`);
+      const isOpen = panel.classList.contains('open');
+
+      // Cerrar todos los demás
+      document.querySelectorAll('.details.open').forEach(d => {
+        d.classList.remove('open');
+        d.style.maxHeight = '0';
+      });
+      document.querySelectorAll('.item.expanded').forEach(i => {
+        i.classList.remove('expanded');
+      });
+
+      if (isOpen) {
+        panel.classList.remove('open');
+        item.classList.remove('expanded');
+        return;
+      }
+
+      item.classList.add('expanded');
+      panel.classList.add('open');
+      panel.innerHTML = `<div class="muted"><span class="spinner"></span>Cargando detalles...</div>`;
+
+      try {
+        const rows = await getDetalles(tipo);
+        if (!rows.length) {
+          panel.innerHTML = `<div class="note info">ℹ️ No hay datos disponibles para este tipo.</div>`;
+          return;
+        }
+
+        const searchId = `search-${tipo}`;
+        panel.innerHTML = `
+          <div class="details-search">
+            <label for="${searchId}">🔍 Buscar en detalles (código, calidad, descripción, etc.)</label>
+            <div class="search-wrapper">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"></path>
+              </svg>
+              <input id="${searchId}" type="search" placeholder="Filtrar resultados..." autocomplete="off">
+            </div>
+          </div>
+          <table id="table-${tipo}">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Calidad</th>
+                <th>Descripción</th>
+                <th>Usos</th>
+                <th>Interno</th>
+                <th>Precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map((r, idx) => `
+                <tr data-row="${idx}" data-search="${escapeHtml((r.codigo + ' ' + r.calidad + ' ' + r.descripcion + ' ' + r.usos + ' ' + r.interno + ' ' + r.precio).toLowerCase())}">
+                  <td><strong>${escapeHtml(r.codigo)}</strong></td>
+                  <td>${escapeHtml(r.calidad)}</td>
+                  <td>${escapeHtml(r.descripcion)}</td>
+                  <td>${escapeHtml(r.usos)}</td>
+                  <td>${escapeHtml(r.interno)}</td>
+                  <td><strong>$${escapeHtml(r.precio)}</strong></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        // Agregar funcionalidad de búsqueda en detalles
+        const searchInput = document.getElementById(searchId);
+        const table = document.getElementById(`table-${tipo}`);
+        
+        searchInput.addEventListener('input', debounce(() => {
+          const query = searchInput.value.trim().toLowerCase();
+          const rows = table.querySelectorAll('tbody tr');
+          
+          let visibleCount = 0;
+          rows.forEach(row => {
+            const searchText = row.getAttribute('data-search');
+            if (!query || searchText.includes(query)) {
+              row.classList.remove('hidden');
+              visibleCount++;
+            } else {
+              row.classList.add('hidden');
+            }
+          });
+
+          // Actualizar mensaje si no hay resultados
+          const existingMsg = panel.querySelector('.no-results-msg');
+          if (existingMsg) existingMsg.remove();
+          
+          if (visibleCount === 0 && query) {
+            const msg = document.createElement('div');
+            msg.className = 'note warning no-results-msg';
+            msg.textContent = '⚠️ No se encontraron resultados para "' + query + '"';
+            table.parentNode.insertBefore(msg, table.nextSibling);
+          }
+        }, 150));
+
+        updateStats();
+      } catch (err) {
+        panel.innerHTML = `<div class="note err">❌ Error cargando detalles: ${escapeHtml(err.message)}</div>`;
+      }
+    };
+
+    async function getDetalles(tipo) {
+      if (detallesCache.has(tipo)) {
+        return detallesCache.get(tipo);
+      }
+
+      if (isTestMode) {
+        // Simular delay de red
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const mockData = MOCK_DETALLES[tipo] || [
+          { codigo: `${tipo}-01`, calidad: 'Estándar', descripcion: 'Detalle de ejemplo', usos: '50', interno: 'INT-XXX', precio: '10000' }
+        ];
+        detallesCache.set(tipo, mockData);
+        return mockData;
+      }
+
+      const csv = await fetchText(`${BASE}&prgname=svmodo1&token=${encodeURIComponent(tokenActual)}&tipo=${encodeURIComponent(tipo)}`);
+      const rows = csv.trim().split(/\r?\n/).filter(Boolean).map(l => {
+        const p = l.split(',');
+        return {
+          codigo: (p[0] || '').trim(),
+          calidad: (p[1] || '').trim(),
+          descripcion: (p[2] || '').trim(),
+          usos: (p[3] || '').trim(),
+          interno: (p[4] || '').trim(),
+          precio: (p[5] || '').trim().replace('.', '')
+        };
+      });
+
+      detallesCache.set(tipo, rows);
+      return rows;
+    }
+
+    // Backtesting Function
+    async function realizarBacktesting() {
+      console.log('🧪 === INICIANDO BACKTESTING ===');
+      const results = {
+        passed: [],
+        failed: [],
+        warnings: []
+      };
+
+      // Test 1: Verificar que hay tipos cargados
+      if (tipos.length > 0) {
+        results.passed.push('✅ Tipos cargados correctamente (' + tipos.length + ' tipos)');
+      } else {
+        results.failed.push('❌ No se cargaron tipos');
+      }
+
+      // Test 2: Verificar estructura de datos
+      const sampleTipo = tipos[0];
+      if (sampleTipo && sampleTipo.codigo && sampleTipo.descripcion) {
+        results.passed.push('✅ Estructura de datos correcta');
+      } else {
+        results.failed.push('❌ Estructura de datos incorrecta');
+      }
+
+      // Test 3: Verificar búsqueda
+      q.value = 'producto';
+      renderLista();
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const searchResults = lista.querySelectorAll('.item').length;
+      if (searchResults > 0) {
+        results.passed.push(`✅ Búsqueda funcional (${searchResults} resultados)`);
+      } else {
+        results.warnings.push('⚠️ Búsqueda no retornó resultados');
+      }
+      q.value = '';
+      renderLista();
+
+      // Test 4: Verificar carga de detalles
+      if (tipos.length > 0) {
+        try {
+          const detalles = await getDetalles(tipos[0].codigo);
+          if (detalles && detalles.length > 0) {
+            results.passed.push(`✅ Carga de detalles funcional (${detalles.length} registros)`);
+          } else {
+            results.warnings.push('⚠️ Detalles vacíos para el primer tipo');
+          }
+        } catch (err) {
+          results.failed.push('❌ Error al cargar detalles: ' + err.message);
+        }
+      }
+
+      // Test 5: Verificar caché
+      if (detallesCache.size > 0) {
+        results.passed.push(`✅ Sistema de caché funcional (${detallesCache.size} entradas)`);
+      } else {
+        results.warnings.push('⚠️ Caché vacío');
+      }
+
+      // Test 6: Verificar UI
+      const uiElements = [searchCard, lista, resumen, q];
+      if (uiElements.every(el => el !== null)) {
+        results.passed.push('✅ Elementos UI presentes');
+      } else {
+        results.failed.push('❌ Faltan elementos UI');
+      }
+
+      // Test 7: Verificar highlight
+      const testHighlight = highlight('Producto Premium', ['producto', 'premium']);
+      if (testHighlight.includes('<mark>')) {
+        results.passed.push('✅ Sistema de resaltado funcional');
+      } else {
+        results.failed.push('❌ Sistema de resaltado no funciona');
+      }
+
+      // Mostrar resultados
+      console.log('\n📊 === RESULTADOS DEL BACKTESTING ===');
+      console.log('\n✅ PRUEBAS EXITOSAS (' + results.passed.length + '):');
+      results.passed.forEach(r => console.log(r));
+      
+      if (results.warnings.length > 0) {
+        console.log('\n⚠️ ADVERTENCIAS (' + results.warnings.length + '):');
+        results.warnings.forEach(r => console.log(r));
+      }
+      
+      if (results.failed.length > 0) {
+        console.log('\n❌ PRUEBAS FALLIDAS (' + results.failed.length + '):');
+        results.failed.forEach(r => console.log(r));
+      }
+
+      const totalTests = results.passed.length + results.failed.length + results.warnings.length;
+      const successRate = ((results.passed.length / totalTests) * 100).toFixed(1);
+      
+      console.log('\n📈 TASA DE ÉXITO: ' + successRate + '%');
+      console.log('🧪 === BACKTESTING COMPLETADO ===\n');
+
+      // Mostrar resumen en UI
+      const summary = `
+        <strong>Backtesting Completado</strong><br>
+        ✅ Exitosas: ${results.passed.length} | 
+        ⚠️ Advertencias: ${results.warnings.length} | 
+        ❌ Fallidas: ${results.failed.length} | 
+        📈 Tasa de éxito: ${successRate}%
+      `;
+      
+      setNote(summary, results.failed.length > 0 ? 'warning' : 'success');
+
+      return {
+        passed: results.passed.length,
+        failed: results.failed.length,
+        warnings: results.warnings.length,
+        successRate: parseFloat(successRate)
+      };
+    }
+
+    // Auto-focus en token al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      tokenInput.focus();
+    });
+  </script>
+</body>
+</html>
