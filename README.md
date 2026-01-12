@@ -1,60 +1,73 @@
-<div align="center">
+# React + TypeScript + Vite
 
-# ¡Hola! Soy Aram Grullon 👋
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Time+New+Roman&color=%23C8BE25&size=25&center=true&vCenter=true&width=600&height=100&lines=Estudiante+de+Bachillerato;Desarrollador+en+Progreso;Entusiasta+de+la+IA)](https://git.io/typing-svg)
+Currently, two official plugins are available:
 
-</div>
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## 👨‍💻 Sobre mí
+## React Compiler
 
-<img align="right" alt="Coding" width="400" src="https://github.com/ChickenCombo/ChickenCombo/blob/main/programming.gif"/>
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- 🎓 Estudiante de bachillerato apasionado por la tecnología
-- ⚡ Actualmente trabajando en InmoScan
-- 🎮 Amante de los videojuegos y el desarrollo
-- 🤖 Interesado en IA y nuevas tecnologías
-- 💼 Explorando el mundo de los negocios y ventas
-- 🇩🇴 Orgullosamente dominicano
-- 👶 17 años aprendiendo y creciendo
+## Expanding the ESLint configuration
 
-## 🌱 Tecnologías en Aprendizaje
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-- Python - Aprendiendo
-- JavaScript - Iniciando
-- HTML - En progreso
-- CSS - Desarrollando
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## 🚀 Proyectos Actuales
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-### InmoScan
-Proyecto de tecnología inmobiliaria
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-### Aprendizaje de IA
-Explorando inteligencia artificial
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-### Desarrollo de Juegos
-Aprendiendo conceptos básicos
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-<div align="center">
-
-## 🤝 Conecta Conmigo
-
-<a href="mailto:aramgrullon@gmail.com">
-  <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
-</a>
-<a href="https://github.com/aramgrullon">
-  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
-</a>
-<a href="#">
-  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
-</a>
-<a href="#">
-  <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"/>
-</a>
-
----
-
-<i>"El aprendizaje es un viaje continuo. Cada día es una oportunidad para crecer y mejorar."</i>
-
-</div>
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
